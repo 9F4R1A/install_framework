@@ -26,7 +26,7 @@ def config_hostname():
         hostname = config['generic']['hostname']
         ipaddress = config['generic']['ipaddress']
         #check hostname first
-        conf_hostname = set_hostname(hostname,ipaddress)
+        conf_hostname = set_hostname(hostname,ipaddress,"localdomain")
         pbar.update(20)
         if conf_hostname == 0:
             file_text_insert(logfile,"\nHostname was set to" + hostname)

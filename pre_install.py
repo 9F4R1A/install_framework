@@ -121,8 +121,6 @@ def check_fw_ports(nt_type):
     port_total = len(port)
     bar_segment = 100 / port_total
     with tqdm(total=100) as pbar:
-        if nt_type == "tcp":
-            pbar.update(0.00000000000006)
         for each_port in port:
             configured_port = check_fw(each_port)
             if configured_port == 0:

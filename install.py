@@ -48,16 +48,24 @@ if ch == 0:
                         cfp_udp = pre_install.check_fw_ports("udp")
                         print()
                         if cfp_udp == 0:
-                            file_text_insert(logfile,"\n------------------------\n --- create known hosts --- \n------------------------\n")
-                            print(" --- create known hosts --- ")
-                            cckh = pre_install.call_check_known_hosts()
+                            print(" --- hosts allow firewall --- ")
+                            file_text_insert(logfile,"\n------------------------\n --- hosts allow firewall --- \n------------------------\n")
+                            cfh = pre_install.check_fw_hosts()
                             print()
-                            if cckh == 0:
-                                file_text_insert(logfile,"\n------------------------\n --- install finished with success --- \n------------------------\n")
-                                print(" --- install finished with success --- ")
+                            if cfh == 0:
+                                file_text_insert(logfile,"\n------------------------\n --- create known hosts --- \n------------------------\n")
+                                print(" --- create known hosts --- ")
+                                cckh = pre_install.call_check_known_hosts()
+                                print()
+                                if cckh == 0:
+                                    file_text_insert(logfile,"\n------------------------\n --- install finished with success --- \n------------------------\n")
+                                    print(" --- install finished with success --- ")
+                                else:
+                                    file_text_insert(logfile,"\n --- Error config known hosts --- ")
+                                    sys.exit("Error config known hosts")
                             else:
-                                file_text_insert(logfile,"\n --- Error config known hosts --- ")
-                                sys.exit("Error config known hosts")
+                                file_text_insert(logfile,"\n --- Error config hosts in firewall --- ")
+                                sys.exit("Error config hosts in firewall")
                         else:
                             file_text_insert(logfile,"\n --- Error config udp ports --- ")
                             sys.exit("Error config udp ports")

@@ -3,9 +3,11 @@ import sys
 from tqdm import tqdm
 from bin.add_repo import add_repo
 from bin.check_fw import check_fw
+from bin.check_host import check_host
 from bin.check_package import check_package
 from bin.install_package import install_package
 from bin.add_fw_port import add_fw_port
+from bin.add_fw_host import add_fw_host
 from bin.check_repo import check_repo
 from bin.check_selinux import check_selinux
 from bin.set_selinux import set_selinux
@@ -132,6 +134,27 @@ def check_fw_ports(nt_type):
                     file_text_insert(logfile,"\nport " + nt_type+ " " + each_port + " was configured\n-----------\n")
                 else:
                     file_text_insert(logfile,"\nError configuring port: " + nt_type+ " " + each_port )
+            pbar.update(bar_segment)
+        return 0
+
+
+def check_fw_hosts():
+    hosts_allow = config['prechecks']['hosts_allow']
+    host = hosts_allow.split()
+    host_total = len(host)
+    bar_segment = 100 / host_total
+    with tqdm(total=100) as pbar:
+        for each_host in host:
+            configured_host = check_host(each_host)
+            if configured_host == 0:
+                file_text_insert(logfile,"\nhost " + each_host + " is configured\n")
+            elif configured_host == 1:
+                file_text_insert(logfile,"\nhost " + each_host + " needs to be configured\n")
+                conf_result_host = add_fw_host(each_host)
+                if conf_result_host == 0:
+                    file_text_insert(logfile,"\nhost " + each_host + " was configured\n-----------\n")
+                else:
+                    file_text_insert(logfile,"\nError configuring host: " + each_host )
             pbar.update(bar_segment)
         return 0
 
